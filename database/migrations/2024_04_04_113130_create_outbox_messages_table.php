@@ -12,15 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('outbox_messages', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('staff_id')->nullable();
-            $table->unsignedBigInteger('client_id')->nullable();
-            $table->string('subject')->nullable();
-            $table->text('message')->nullable();
-            $table->timestamps();
 
-            $table->foreign('staff_id')->references('id')->on('staff');
+            $table->id();
+
+            $table->string('subject')->nullable();
+            $table->string('attached_file')->nullable();
+            $table->text('message')->nullable();
+            $table->boolean('reply_flag')->default(0);
+            $table->unsignedBigInteger('client_id')->nullable();
             $table->foreign('client_id')->references('id')->on('clients');
+
+            $table->unsignedBigInteger('staff_id')->nullable();
+            $table->foreign('staff_id')->references('id')->on('staff');
+            $table->boolean('archive_status')->default(0);
+            $table->text('replyMessage')->nullable();
+            $table->boolean('starred_status')->default(0);
+
+            $table->timestamps();
         });
     }
 

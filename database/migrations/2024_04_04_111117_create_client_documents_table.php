@@ -13,11 +13,21 @@ return new class extends Migration
     {
         Schema::create('client_documents', function (Blueprint $table) {
             $table->id();
+
+            $table->unsignedBigInteger('staff_id')->nullable();
+
             $table->string('document_name')->nullable();
             $table->string('filename')->nullable();
-            $table->string('path')->nullable();
             $table->string('file_path')->nullable();
             $table->boolean('shown_to_agent')->default(false);
+            $table->string('encrypted_file_path')->nullable();
+            $table->string('document_type')->nullable();
+            $table->enum('document_status',['pending','rejected','varified'])->default('pending');
+            $table->string('status')->nullable();
+            $table->boolean('is_loan_document')->default(false);
+            $table->foreign('staff_id')->references('id')->on('staff');
+
+
             $table->timestamps();
         });
     }

@@ -27,21 +27,22 @@ return new class extends Migration
             $table->string('application_status');
             $table->string('bank_feedback');
 
-       
+
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('staff_id');
             $table->unsignedBigInteger('bank_id');
             $table->unsignedBigInteger('bank_products_id');
             $table->unsignedBigInteger('client_documents_id');
-   
-           
-         
+            $table->unsignedBigInteger('bank_applications_id');
+
+            $table->foreign('bank_applications_id')->references('id')->on('bank_applications');
+
+
             $table->foreign('client_id')->references('id')->on('clients');
             $table->foreign('staff_id')->references('id')->on('staff');
             $table->foreign('bank_id')->references('id')->on('banks');
             $table->foreign('bank_products_id')->references('id')->on('bank_products');
             $table->foreign('client_documents_id')->references('id')->on('client_documents');
-
             $table->timestamps();
         });
     }

@@ -11,11 +11,11 @@
                         <h4 class="card-title">{{ucfirst($status)}} Applications</h4>
                     </div>
                     <div class="col-sm-12 col-md-6">
-                        <div class="user-list-files d-flex float-right">
+                        {{-- <div class="user-list-files d-flex float-right">
                             <a class="btn btn-primary" href="{{ route('show.loan.applications') }}">
                                 Add New Application
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="iq-card-body">
@@ -26,19 +26,19 @@
 
 
                                     <th>SR No</th>
-                                    <th>Application Number</th>    
+                                    <th>Application Number</th>
                                     <th>Proposal ID</th>
                                     <th>Applicant's Name</th>
                                     <th> Applicant's Mobile</th>
                                     <th>Bank Applied to</th>
                                     <th> Bank Product</th>
-                                    <th> Monthly Instalment</th> 
-                                    <th>  Application Date</th> 
-                                    <th> Processed By</th> 
+                                    <th> Monthly Instalment</th>
+                                    <th>  Application Date</th>
+                                    <th> Processed By</th>
                                     <td>Actions</td>
 
 
-                             
+
                                 </tr>
                             </thead>
                             <?php $i=1; ?>
@@ -52,14 +52,14 @@
                                     <td>{{ $loan->client->phone_number }}</td>
                                     <td>{{$loan->client_proposal->mortgageplan->bank->name}}</td>
                                     <td> {{$loan->client_proposal->mortgageplan->product->name}}</td>
-                            
+
                                     <td>{{ $loan->client_proposal->mortgageplan->product->monthly_installment }}</td>
                                     <td>{{ $loan->application_date }}</td>
 
                                     <td>{{$loan->staff->first_name ?? ''}}</td>
-    
 
-                                
+
+
                                     <!-- Add more cells here for additional fields -->
                                     {{-- {{ route('delete.loan.products',$loan->id) }} --}}
                                     <td>
@@ -80,7 +80,7 @@
         </div>
     </div>
 </div>
-      
+
 
 
 
@@ -120,7 +120,7 @@
                     _token: '{{ csrf_token() }}',
                     email: leadEmail,
                     first_name: firstName
-                    
+
                 },
                 success: function(response){
                     // console.log("response");
