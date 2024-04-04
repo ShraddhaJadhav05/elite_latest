@@ -14,56 +14,71 @@ use App\Models\notification_message_client;
 class notificationmessageController extends Controller
 {
     public function show_outbox_notification(Request $request){
-
+        $user_role = Auth::user()->role;
         $data['pageTitle']='notification';
-        $profileid = Auth::user()->id;
-        $adminData = User::find($profileid);
-
-        $loggedInUserEmail = Auth::user()->email;
+        $userId = Auth::user()->id;
+        $adminData = Auth::user();
+        if($user_role == 'staff'){
+            $staff = auth()->user()->staff;
+            $sentMessages = notification_message::where("from", "staff")->where("staff_id", $staff?->id)->orderBy('created_at', 'desc')->get();
+        }elseif($user_role == "user"){
+            // i don't know thw client portal and funtionality so haven't did it '
+            // $client = auth()->user()->client;
+            // if ($client) {
+            //     // Access the notification messages of the client
+            //     $sentMessages = $client->notification_messages->orderBy('created_at', 'desc')->get();
+            // }
+        }
     
-        $searchQuery = $request->input('search');
+        // $searchQuery = $request->input('search');
     
-        $sentMessages = notification_message::where('staff_id', Auth::id())
-                        ->when($searchQuery, function ($query) use ($searchQuery) {
-                            $query->Where('message', 'like', '%' . $searchQuery . '%')
-                                  ->orWhereHas('clients', function ($subQuery) use ($searchQuery) {
-                                      $subQuery->where('first_name', 'like', '%' . $searchQuery . '%');
-                                  });
-                        })
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+        // $sentMessages = notification_message::where('staff_id', Auth::id())
+        //                 ->when($searchQuery, function ($query) use ($searchQuery) {
+        //                     $query->Where('message', 'like', '%' . $searchQuery . '%')
+        //                           ->orWhereHas('clients', function ($subQuery) use ($searchQuery) {
+        //                               $subQuery->where('first_name', 'like', '%' . $searchQuery . '%');
+        //                           });
+        //                 })
+        //                 ->orderBy('created_at', 'desc')
+        //                 ->get();
 
 
         return view('staff_portal_file.notification_messages.outbox',compact('data','adminData','sentMessages'));
     }
 
     public function show_inbox_notification(Request $request){
+        $user_role = Auth::user()->role;
         $data['pageTitle']='notification';
-        $profileid = Auth::user()->id;
-        $adminData = User::find($profileid);
-
+        $userId = Auth::user()->id;
+        $adminData = Auth::user();
         $loggedInUserEmail = Auth::user()->email;
-    
+
+            
         $searchQuery = $request->input('search');
     
-        $staffId = Auth::id(); 
-        $inboxMessages = notification_message::where('staff_id', $staffId)
-                        ->whereHas('clients', function ($query) {
-                            $query->where('client_id', '!=', null);
-                        })
-                        ->where('reply_flag', 1); 
-    
-        if ($searchQuery) {
-            $inboxMessages->where(function ($query) use ($searchQuery) {
-                $query->Where('message', 'like', '%' . $searchQuery . '%')
-                      ->orWhereHas('clients', function ($subQuery) use ($searchQuery) {
-                          $subQuery->where('first_name', 'like', '%' . $searchQuery . '%');
-                      });
-            });
+        // $inboxMessages = notification_message::where('staff_id', $staffId)
+        //                 ->whereHas('clients', function ($query) {
+        //                     $query->where('client_id', '!=', null);
+        //                 });
+                        // ->where('reply_flag', 1); 
+        // if ($searchQuery) {
+        //     $inboxMessages->where(function ($query) use ($searchQuery) {
+        //         $query->Where('message', 'like', '%' . $searchQuery . '%')
+        //               ->orWhereHas('clients', function ($subQuery) use ($searchQuery) {
+        //                   $subQuery->where('first_name', 'like', '%' . $searchQuery . '%');
+        //               });
+        //     });
+        // }
+        if($user_role == 'staff'){
+            $staff = auth()->user()->staff;
+            $inboxMessages = notification_message::where("from", "admin")->where("staff_id", $staff?->id)->orderBy('created_at', 'desc')->get();
+        }elseif($user_role == "user"){
+            $client = auth()->user()->client;
+            if ($client) {
+                // Access the notification messages of the client
+                $inboxMessages = $client->notification_messages->orderBy('created_at', 'desc')->get();
+            }
         }
-    
-        $inboxMessages = $inboxMessages->orderBy('created_at', 'desc')->get();
-
         return view('staff_portal_file.notification_messages.inbox',compact('data','adminData','inboxMessages'));
     }
 
@@ -77,10 +92,8 @@ class notificationmessageController extends Controller
     }
 
     public function send_notification(Request $request){
-        $sentMessages = notification_message::where('staff_id', Auth::id())->orderBy('created_at', 'desc')->get();
 
         $imageName = null;
-        $clients = client::all();
 
         // Validate the incoming request
         $request->validate([
@@ -105,16 +118,11 @@ class notificationmessageController extends Controller
         $message->message = $request->input('message');
 
         $message->attached_file = $imageName;
-
+        $message->from = 'staff';
         $message->save();
 
-        $message->clients()->sync($request->input('client_id'));
+        $message->clients()->sync($request->input('client_id',true, 'notification_message_clients'));
 
-        // Fetch selected clients
-        $selectedClients = client::whereIn('id', $request->input('client_id'))->get();
-
-        $loggedinuser = Auth::user();
-        
         return redirect()->route('show.outbox.notification')->withSuccess("Data Inserted Successfully");
     }
 

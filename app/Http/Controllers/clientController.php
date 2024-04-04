@@ -23,17 +23,17 @@ class clientController extends Controller
     public function all_clients(Request $request){
         $profileid = Auth::user()->id;
         $adminData = User::find($profileid);
+        $userRole = Auth::user()->role;
 
         $data['pageTitle']='clients';
         $searchQuery = $request->input('search');
-        $clients = client::with('staff')
-        ->when($searchQuery, function ($query) use ($searchQuery) {
-            $query->where('first_name', 'like', '%' . $searchQuery . '%')
-                  ->orWhere('phone_number', 'like', '%' . $searchQuery . '%')
-                  ->orWhere('email', 'like', '%' . $searchQuery . '%');
-        })->paginate(10);
 
-        // $clients=client::paginate(10);
+        if($userRole == 'admin'){
+            $clients = client::all();
+        }elseif($userRole == 'staff'){
+            $staffId = Auth::user()->staff->id;
+            $clients = client::where('staff_id',  $staffId)->get()->paginate(10);
+        }
         $staff=staff::all();
         return view('clients.all_clients', compact('clients','data','adminData','staff'));
     }

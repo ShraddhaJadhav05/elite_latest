@@ -44,7 +44,7 @@
                                     <!-- <th>Gender	</th> -->
                                     <th>Loan Amount</th>
                                     <th>Monthly Salary Drawn</th>
-                                    <th>Assigned Staff</th>
+<th>Assigned Staff</th>
                                     <th>Action</th>
                                     <th>Category</th>
                                  </tr>
@@ -64,7 +64,7 @@
                                     <!-- <td>{{$leads->gender}}</td> -->
                                     <td>{{$leads->loan_amount_offered}}</td>
                                     <td>{{$leads->annual_gross_income}}</td>
-                                    <td>{{$leads->staff->first_name ?? ''}}</td>  
+                                    <td>{{$leads->staff->first_name ?? ''}}</td>
                                     <td>
                                        <div class="flex align-items-center list-user-action">
                                           <a class="iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="view" href="{{route('view.leads',$leads->id)}}"><i class="ri-eye-line"></i></a>
@@ -85,7 +85,7 @@
                                     </td> -->
 
                                     <td>
-                                        <div class="col-sm-12 col-md-6">
+                                        <div class="col-sm-12 col-md-6" style="@if($leads->staff_id === null) display: none; @endif" >
                                             <div class="user-list-files d-flex float-right">
                                                 <!-- Original button to make client -->
                                                 <a class="btn btn-primary make-client-button" data-email="{{ $leads->lead->email }}" data-first-name="{{ $leads->lead->first_name }}" data-lead-id="{{ $leads->id }}" style="margin-right: -43px;width: 114px;  @if($leads->category_flag === 1) display: none; @endif" href="#">

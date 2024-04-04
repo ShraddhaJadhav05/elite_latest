@@ -13,6 +13,7 @@ use App\Models\Mortgageplan;
 use App\Models\bank_product;
 use App\Models\bank_applications;
 use App\Models\Client_proposal_plan;
+use App\Models\notification_message;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -105,39 +106,48 @@ class ProposalController extends Controller
     }
 
     public function add_proposal(Request $request, $client_id){
-    $no_of_plans=0;
-     $existingCount = 0;
-     $planIds = $request->input('plan_ids');
+        $no_of_plans=0;
+        $existingCount = 0;
+        $planIds = $request->input('plan_ids');
 
-   // Create a new Proposal instance for each plan ID
-   foreach ($planIds as $planId) {
-    if (!is_null($planId)) {
-        $existingProposal = Client_proposal_plan::where('client_id', $client_id)
-       ->where('plan_id', $planId)
-       ->first();
-       if(!$existingProposal) {
-        $clientProposalPlan = new Client_proposal_plan();
-        $clientProposalPlan->plan_id = $planId;
-        $clientProposalPlan->client_id = $client_id;
-        $clientProposalPlan->save();
-       }
-       else {
-        // Increment the count of existing proposals
-        $existingCount++;
-         }
-         $no_of_plans++;
+    // Create a new Proposal instance for each plan ID
+    foreach ($planIds as $planId) {
+        if (!is_null($planId)) {
+            $existingProposal = Client_proposal_plan::where('client_id', $client_id)
+        ->where('plan_id', $planId)
+        ->first();
+        if(!$existingProposal) {
+            $clientProposalPlan = new Client_proposal_plan();
+            $clientProposalPlan->plan_id = $planId;
+            $clientProposalPlan->client_id = $client_id;
+            $clientProposalPlan->save();
+        }
+        else {
+            // Increment the count of existing proposals
+            $existingCount++;
+            }
+            $no_of_plans++;
+        }
     }
-   }
-    if($existingCount==0){
-        return response()->json(['success' => 'Data inserted successfully'], 200);
-    }else if($no_of_plans==$existingCount)
-    {
-        return response()->json(['error' =>'This proposals already assigned'], 422);
-    }else{
-        return response()->json(['success' =>$existingCount.' Proposals already assigned'], 200);
-        
+    if($no_of_plans == 3){
+          // create a notification message for client
+          $message2 = new notification_message();
+          $message2->from = Auth::user()->role;
+          $message2->staff_id = Auth::user()->staff->id;
+          $message2->message =  " You received 3 loans proposal from Elite";
+          $message2->save();
+          $message2->clients()->sync([$client_id], 'notification_message_clients');
     }
-   
+        if($existingCount==0){
+            return response()->json(['success' => 'Data inserted successfully'], 200);
+        }else if($no_of_plans==$existingCount)
+        {
+            return response()->json(['error' =>'This proposals already assigned'], 422);
+        }else{
+            return response()->json(['success' =>$existingCount.' Proposals already assigned'], 200);
+            
+        }
+    
     }
     
      public function all_intrested_clients_proposal(Request $request, $client_id){
@@ -147,7 +157,7 @@ class ProposalController extends Controller
         return view('staff_portal_file.proposal.view_client_proposal',compact('proposal'));
     }
 
-    public function create_application(Request $request, $id){
+    public function create_application($id){
 
         $profileid = Auth::user()->id;
 
@@ -156,7 +166,6 @@ class ProposalController extends Controller
         ->first();
 
         $proposal = Client_proposal_plan::with(['mortgageplan','bank', 'branch', 'product'])->where('id', $id)->where('status','deactive')->first();
-        //dd($proposal);
         $currentDate = Carbon::now()->toDateString();
         if($proposal){
             $proposal_data = [
@@ -166,7 +175,6 @@ class ProposalController extends Controller
                 'bank_id'=>$proposal->mortgageplan->bank->id,
                 'staff_id'=>$adminData->staff->id ?? '' ,
             ];
-    // dd($proposal_data);
             $create_application = bank_applications::create($proposal_data);
             $latestId = $create_application->id;
 
@@ -180,7 +188,13 @@ class ProposalController extends Controller
                 
             }
         }
-       
+         // create a notification message for client
+         $message2 = new notification_message();
+         $message2->from = Auth::user()->role;
+         $message2->staff_id = Auth::user()->staff->id;
+         $message2->message =   "Congratulations. You loan application has been created and ready to proceed with bank";
+         $message2->save();
+         $message2->clients()->sync([$proposal->client_id], 'notification_message_clients');
         return redirect()->route('all.loan_applications', ['status' => 'pending']);
 
 

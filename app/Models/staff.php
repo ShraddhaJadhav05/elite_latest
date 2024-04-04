@@ -29,17 +29,17 @@ class staff extends Model
     //     parent::boot();
 
         
-    //     static::creating(function ($staff) {
-    //         $user = User::create([
-    //             'fname' => $staff->first_name,
-    //             'lname' => $staff->last_name,
-    //             'email' => $staff->email,
-    //             'password' => $staff->password, 
-    //             'role' => 'staff',
-    //         ]);
+        //     static::creating(function ($staff) {
+            //         $user = User::create([
+                //             'fname' => $staff->first_name,
+                //             'lname' => $staff->last_name,
+                //             'email' => $staff->email,
+                //             'password' => $staff->password, 
+                //             'role' => 'staff',
+            //         ]);
 
-    //         // Associate the staff member with the user
-    //         $staff->user()->associate($user);
-    //     });
+            //         // Associate the staff member with the user
+            //         $staff->user()->associate($user);
+        //     });
     // }
 }

@@ -8,6 +8,8 @@ use App\Models\ClientDocument;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\client;
+use App\Models\notification_message;
+use App\Models\staff;
 use Illuminate\Support\Facades\Crypt;
 use DB;
 
@@ -31,8 +33,8 @@ class documentsController extends Controller
                 $query->where('id', $clientId);
             })
             ->when($email, function ($query) use ($email) {
-                    $query->where('email', $email);
-            
+                                    $query->where('email', $email);
+                
             })
             
             ->paginate(10);
@@ -75,7 +77,7 @@ class documentsController extends Controller
     }
 
     public function add_document(Request $request,$clientId){
-         $profileid = Auth::user()->id;
+$profileid = Auth::user()->id;
         $profileid = Auth::user()->id;
         $adminData = User::with('staff')
         ->where('id',$profileid)
@@ -106,7 +108,7 @@ class documentsController extends Controller
         }
         
         $docData['client_id'] = $clientId;
-        //dd($adminData->staff->id);
+//dd($adminData->staff->id);
         $docData['staff_id'] = $adminData->staff-> id ??''; 
 // dd($docData);
         $clientDocuments = ClientDocument::create($docData);
@@ -159,7 +161,7 @@ class documentsController extends Controller
         if($imageName !=null){
             $docData['filename'] = $imageName; // Update the image name in the array
         }
-//dd($docData);
+
         // Update file_path and encrypted_file_path if filename is updated
         if (isset($docData['filename'])) {
             $filePath = 'cleint_documents/' . $docData['filename'];
@@ -227,13 +229,25 @@ public function documents_verfication($id){
 }
 
 public function update_documents_status(Request $request){
-   
     $status = $request->input('status');
-    $id = $request->input('id');
-//  echo $status;exit;
-    $clientDocument=ClientDocument::find($id);
+    $client_id =  $request->input('client_id');
+    $document_id = $request->input('document_id');
+    $document_name = $request->input('document_name');
+    $clientDocument=ClientDocument::find($document_id);
     $clientDocument->document_status = $status;
     $update_success = $clientDocument->save();
+    // Create a new notification message to client about its status
+     $message2 = new notification_message();
+     $message2->from = Auth::user()->role;
+     $message2->staff_id = Auth::user()->staff->id;
+     if($status == 'rejected'){
+        $message2->message =  "Your " . $document_name ."was not verified. Please contact your account manager to know more.";
+     }elseif($status == 'varified'){
+        $message2->message =  "Your " . $document_name ."has been successfully verified. On Verification. ";
+     }
+     $message2->save();
+     $message2->clients()->sync([$client_id], 'notification_message_clients');
+
      if($update_success){
         return response()->json(['status'=> 1]);
      }else{

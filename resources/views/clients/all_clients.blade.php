@@ -46,6 +46,7 @@
                              </thead>
                              <?php $i=1; ?>
                              <tbody>
+                                
                              @foreach($clients as $client)
                                  <tr>
                                     <td>{{$i++}}</td>
@@ -140,7 +141,6 @@
                             <div id="user-list-page-info" class="col-md-12" >
                                 <div style="float:right;">
 
-                                {{ $clients->appends(['search' => request('search')])->links() }}
                                 </div>
                             </div>
                         </div>

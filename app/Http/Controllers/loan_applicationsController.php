@@ -14,7 +14,7 @@ use App\Models\bank_product;
 use App\Models\client;
 use App\Models\staff;
 use App\Models\ClientDocument;
-
+use App\Models\notification_message;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -107,12 +107,22 @@ class loan_applicationsController extends Controller
 
 
     public function edit_loan_applications(Request $request,$id){
-        //dd($request->all());
         $loans=bank_applications::find($id);
             if(is_null($loans)){
                 return response()->json(['message'=> 'not found'],404);
             }
             $loans->update($request->all());
+             // create a notification message for client
+            $message2 = new notification_message();
+            $message2->from = Auth::user()->role;
+            $message2->staff_id = Auth::user()->staff->id;
+            if($request->application_status == "rejected"){
+                $message2->message =  "Your application has  been rejected by Bank for some reason. Please contact your account manager";
+            }elseif($request->application_status == "rejected"){
+                $message2->message =  "Congratulations. Your application has been approved by the Bank";
+            }
+            $message2->save();
+            $message2->clients()->sync([$loans->client_id], 'notification_message_clients');
         
             // return response($lead,200);
             return redirect()->route('view.loan.applications', ['id' => $id])->withSuccess("Data Updated Successfully");

@@ -23,11 +23,6 @@ class client extends Model
         return $this->belongsTo(client::class, 'client_id', 'id');
     }
 
-    public function staff()
-    {
-        return $this->belongsTo(staff::class, 'staff_id', 'id');
-    }
-
     public function clientdocuments() {
         return $this->hasMany(ClientDocument::class);
     }
@@ -90,5 +85,10 @@ class client extends Model
 {
     return $this->belongsToMany(client::class, 'outbox_message_cliens');
 }
+
+    public function notification_messages()
+    {
+        return $this->belongsToMany(notification_message::class, 'notification_message_clients')->orderBy('created_at', 'desc');
+    }
 
 }

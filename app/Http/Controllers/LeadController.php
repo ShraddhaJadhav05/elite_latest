@@ -8,6 +8,7 @@ use App\Models\staff;
 use App\Models\User;
 use App\Models\lead_staff;
 use App\Models\client;
+use App\Models\notification_message;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -161,12 +162,13 @@ class LeadController extends Controller
 
     public function assignStaff(Request $request)
 {
-   
     $data['pageTitle']='leads';
     $leadId = $request->lead_id;
     $staffId = $request->staff_id;
 
-    $existingAssignment = lead::where('id', $leadId)->update(['staff_id' => $staffId]);
+ lead::where('id', $leadId)->update(['staff_id' => $staffId]);
+ // send notification to staff and client
+       
    //Log::info($existingAssignment);
 
   
@@ -193,10 +195,10 @@ class LeadController extends Controller
     
         // Fetch the lead based on the provided lead_id
         $lead = Lead::find($request->input('lead_id'));
-    
+  
         // Create a new client record and populate it with lead data
         $client = new Client();
-        $client->lead_id = $lead->id;
+       
         // Assign other lead data to client fields
         $client->first_name = $lead->first_name;
         $client->email = $lead->email;
@@ -225,16 +227,32 @@ class LeadController extends Controller
         $client->loan_looking_for = $lead->loan_looking_for;
         $client->loan_amount_required = $lead->loan_amount_required;
         $client->property_price = $lead->property_price;
-        $client->down_payment	 = $lead->down_payment	;
+        $client->down_payment = $lead->down_payment;
         $client->years = $lead->years;
         $client->interest_rate = $lead->interest_rate;
         $client->emirates = $lead->emirates;
         $client->lead_type = $lead->lead_type;
-
-
-
+        $client->staff_id = $lead->staff_id;
+        $user = $lead->user;
+        $client->user_id = $user->id;
         // Save the client record
         $client->save();
+        // Create a new notification message
+        $message = new notification_message();
+        $message->from = Auth::user()->role;
+        $message->staff_id = $client->staff_id;
+        $message->message = "One lead has been pre-qualified and become a client with you";
+        $message->save();
+
+        // create a notification message for client
+        $message2 = new notification_message();
+        $message2->from = Auth::user()->role;
+        $staff = staff::where('id', $client->staff_id)->first();
+        $message2->message =  "Congratulations, you have be come a client at Elite and".$staff->first_name ."is your account manager";
+        $message2->save();
+        $message2->clients()->sync([$client->id], 'notification_message_clients');
+ 
+        $lead->delete();
         return response()->json(['success' => true,'data' => $data]);
 
     }

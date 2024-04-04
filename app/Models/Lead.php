@@ -20,7 +20,7 @@ class Lead extends Model
 
     public function client()
     {
-        return $this->hasMany(client::class, 'lead_id');
+        return $this->belongsTo(client::class, 'email', 'email');
     }
 
     public function user()
@@ -43,38 +43,38 @@ class Lead extends Model
     // {
     //     parent::boot();
 
-    //     static::saving(function ($lead) {
-    //         // Check if a corresponding user exists
-    //         $user = User::where('email', $lead->email)->first();
-    //         if (!$user) {
-    //             // If user doesn't exist, create a new one
-    //             $user = User::create([
-    //                 'fname' => $lead->first_name,
-    //                 'lname' => $lead->last_name,
-    //                 'email' => $lead->email,
-    //                 'password' => $lead->password,
-    //                 'role' => 'user',
-    //             ]);
-    //         } else {
-    //             // If user exists, update its details
-    //             $user->update([
-    //                 'fname' => $lead->first_name,
-    //                 'lname' => $lead->last_name,
-    //                 'password' => $lead->password,
-    //             ]);
-    //         }
+        //     static::saving(function ($lead) {
+            //         // Check if a corresponding user exists
+            //         $user = User::where('email', $lead->email)->first();
+            //         if (!$user) {
+                //             // If user doesn't exist, create a new one
+                //             $user = User::create([
+                    //                 'fname' => $lead->first_name,
+                    //                 'lname' => $lead->last_name,
+                    //                 'email' => $lead->email,
+                    //                 'password' => $lead->password,
+                    //                 'role' => 'user',
+                //             ]);
+            //         } else {
+                //             // If user exists, update its details
+                //             $user->update([
+                    //                 'fname' => $lead->first_name,
+                    //                 'lname' => $lead->last_name,
+                    //                 'password' => $lead->password,
+                //             ]);
+            //         }
 
-    //         // Associate the user with the lead
-    //         $lead->user()->associate($user);
-    //     });
+            //         // Associate the user with the lead
+            //         $lead->user()->associate($user);
+        //     });
 
-    //       // Handle deleting event
-    //       static::deleting(function ($lead) {
-    //         // Find and delete the associated user
-    //         $user = User::where('email', $lead->email)->first();
-    //         if ($user) {
-    //             $user->delete();
-    //         }
+          //       // Handle deleting event
+          //       static::deleting(function ($lead) {
+            //         // Find and delete the associated user
+            //         $user = User::where('email', $lead->email)->first();
+            //         if ($user) {
+                //             $user->delete();
+            //         }
     //     });
     // }
 
