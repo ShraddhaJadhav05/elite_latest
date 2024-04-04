@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('outbox_messages', function (Blueprint $table) {
-            $table->boolean('reply_flag')->default(0);
+        Schema::table('client_proposal_plans', function (Blueprint $table) {
+
+
+            $table->bigInteger('plan_id')->unsigned()->nullable();
+
+
+            $table->foreign('plan_id')->references('id')->on('mortgageplans');
         });
     }
 
@@ -21,7 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('outbox_messages', function (Blueprint $table) {
+        Schema::table('client_proposal_plans', function (Blueprint $table) {
             //
         });
     }

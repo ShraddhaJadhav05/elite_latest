@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('outbox_messages', function (Blueprint $table) {
-            $table->boolean('archive_status')->default(0);
-
+        Schema::table('outbox_message_cliens', function (Blueprint $table) {
+            $table->bigInteger('outbox_message_id')->unsigned()->nullable();
+            $table->foreign('outbox_message_id')->references('id')->on('outbox_message_cliens');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('outbox_messages', function (Blueprint $table) {
+        Schema::table('outbox_message_cliens', function (Blueprint $table) {
             //
         });
     }

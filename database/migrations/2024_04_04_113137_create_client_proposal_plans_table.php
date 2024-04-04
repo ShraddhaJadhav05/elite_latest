@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('outbox_message_cliens', function (Blueprint $table) {
+        Schema::create('client_proposal_plans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('outbox_message_id')->nullable();
-            $table->unsignedBigInteger('client_id')->nullable();
-            $table->timestamps();
+            $table->bigInteger('client_id')->unsigned()->nullable();
 
-            $table->foreign('outbox_message_id')->references('id')->on('outbox_messages');
+            $table->enum('status', ['active', 'deactive'])->default('deactive');
+
+            $table->string('client_interest')->nullable();
             $table->foreign('client_id')->references('id')->on('clients');
+
+            $table->timestamps();
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('outbox_message_cliens');
+        Schema::dropIfExists('client_proposal_plans');
     }
 };
