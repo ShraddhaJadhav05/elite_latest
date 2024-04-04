@@ -1,0 +1,199 @@
+.main-navbar .navbar.navbar-light {
+    z-index: 999;
+}
+.nav_first {
+    margin-top: 31px !important;
+}
+.main_menu {
+    margin-top: 26px !important;
+}
+.five-banner-area {
+    background: #041366;
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    margin-top: -20px;
+}
+.five-banner-area .banner-shape img:nth-child(2) {
+    z-index: 9;
+    width: 40%;
+}
+.main-banner-content h1 {
+    color: #fff;
+}
+.confidence-home-btn li .video-btn i {
+    background: #fff;
+    color: #041365;
+}
+.confidence-home-btn li .video-btn span {
+    color: #fff;
+}
+.about-style-area.with-black-color {
+    background-color: #fd5d5d;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+.five-banner-area {
+    height: 719px;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+.five-banner-here{
+   
+    margin-left: 3%;
+    margin-right: 3%;
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    margin-top: -20px;
+    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+.about-style-wrap-content .about-list-tab .nav .nav-item .nav-link::before {
+    background-color: #041366;
+}
+.about-style-wrap-content .about-list-tab .tab-content .tab-pane .content .list li i {
+    color: #041366;
+}
+.tab-btn .main-default-btn {
+    border: 1px solid #041366;
+    background: #041366;
+}
+.tab-btn .main-default-btn:hover {
+    background: #fff;
+    color: #fd5d5d;
+    border-color: #fff;
+}
+.how_wrk {
+    background-color: #fff;
+    color: #041366;
+    border: 1px solid #fff;
+}
+.how_wrk:hover {
+    background-color: #041366;
+    border: 1px solid #041366;
+    color: #fff;
+}
+.about-style-area.with-black-color .information-card .icon i {
+    background: #041366;
+}
+.get-quote-style-content h3 {
+    color: #041366;
+}
+.quote-btn h6  {
+    color: #777 !important;
+    font-family: poppins, sans-serif;
+    font-weight: 400;
+    line-height: 25px;
+}
+.let-contact-area.with-main-color .let-contact-form .sub-title {
+    color: #fd5d5d;
+}
+.let-contact-form h3 {
+    color: #041366;
+}
+.let-contact-area.with-main-color {
+    background-color: transparent;
+}
+.let-contact-area {
+    padding-top: 100px;
+}
+.why-choose-us-item {
+    border-radius: 18px;
+}
+.why-choose-us-item:hover {
+    -webkit-transform: unset;
+    transform: unset;
+}
+.process-style-area {
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+.get-quote-style-area {
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+.blog-style-card {
+    border-radius: 18px;
+}
+.logo  {
+    width: 17%;
+}
+.others-option  {
+    width: 17%;
+    float: right;
+}
+.others-option a {
+    float: right;
+}
+.blog-style-slider1 .blog-style-card img  {
+    width: auto;
+    margin: 0 auto;
+    text-align: center;
+}
+.blog-style-slider1 .blog-style-card {
+    margin-bottom: 30px;
+    background-color: transparent;
+}
+.blog_img {
+    height: 433px;
+}
+.blog_tag  {
+    display: inline-block;
+padding: 5px 15px;
+border-radius: 5px;
+background-color: #fd5d5d;
+color: #fff;
+}
+.about-style-wrap-content .sub-title {
+    color: #041366;
+}
+.indiv_faq  {
+    width: 100%;
+    max-width: 100% !important;
+}
+.four-team-area .team-item h3 {
+    height: 52px;
+}
+.finance_second_btn {
+    color: #041366;
+    border: 1px solid #fff;
+    background: #fff;
+}
+.about-style-area.with-black-color .information-card p span a:hover {
+    color: #fff;
+}
+@media(max-width:991px)  {
+    .five-banner-here {
+        margin-top: 0px;
+    }
+    .four-team-area .team-item h3 {
+        height: auto;
+    }
+    .five-banner-area {
+        margin-top: 3px;
+    }
+    .five-banner-area .banner-shape img:nth-child(2) {
+        z-index: 9;
+        width: 100%;
+    }
+    .fun-fact-style-card {
+        padding: 25px 25px 25px 112px !important;
+    }
+}
+@media(max-width:767px)  {
+    .banner_one  {
+        order:2;
+    }
+    .banner_two  {
+        order:1;
+    }
+    .about-list-tab .quote-btn li a {
+        width: 60% !important;
+    }
+}
